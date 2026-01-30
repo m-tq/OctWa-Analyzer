@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/main/:path*",
+      "destination": "https://octra.network/:path*"
+    },
+    {
+      "source": "/api/scan/:path*",
+      "destination": "https://network.octrascan.com/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}
