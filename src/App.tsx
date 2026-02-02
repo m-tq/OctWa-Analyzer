@@ -98,7 +98,7 @@ const Header = ({ isDark, setIsDark }: { isDark: boolean, setIsDark: (v: boolean
   };
 
   return (
-    <header className="grid grid-cols-3 items-center h-[56px] px-4 border-b border-[var(--border)] bg-[var(--background)] backdrop-blur-md z-10 sticky top-0">
+    <header className="grid grid-cols-[auto_1fr_auto] items-center h-[56px] px-4 border-b border-[var(--border)] bg-[var(--background)] backdrop-blur-md z-10 sticky top-0">
       <div className="flex items-center gap-4 justify-start">
         <h1 
           onClick={() => navigate('/')}
@@ -108,15 +108,15 @@ const Header = ({ isDark, setIsDark }: { isDark: boolean, setIsDark: (v: boolean
           <span>OctWa Analyzer</span>
         </h1>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center w-full">
         {!isHomePage && (
-          <form onSubmit={performSearch} className="hidden md:flex items-center gap-2 w-full max-w-2xl">
+          <form onSubmit={performSearch} className="hidden md:flex items-center gap-2 w-full max-w-3xl">
             <input 
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="search hash / addr / epoch"
-              className="bg-[var(--muted)] border border-[var(--border)] px-3 py-1 text-xs focus:outline-none focus:border-[var(--primary)] w-full rounded-sm text-[var(--foreground)]"
+              className="bg-transparent border-b border-[var(--border)] px-3 py-1 text-xs focus:outline-none focus:border-[var(--primary)] w-full rounded-sm text-[var(--foreground)]"
             />
             <button type="submit" className="bg-[var(--primary)] text-white px-3 py-1 text-xs font-medium rounded-sm hover:opacity-90 whitespace-nowrap">
               Analyze
@@ -147,7 +147,7 @@ const Footer = ({ currentBlock }: { currentBlock: number }) => (
     </div>
     <div className="w-1/3 text-center flex justify-center items-center gap-2">
       <span className="text-[var(--muted-foreground)]">Network:</span>
-      <span className="text-[var(--foreground)]">Octra Mainnet</span>
+      <span className="text-[var(--foreground)]">Mainnet</span>
     </div>
     <div className="w-1/3 flex justify-end items-center gap-2">
       <span className="text-[var(--muted-foreground)]">Current Block:</span>
@@ -174,15 +174,15 @@ const Welcome = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full max-w-4xl mx-auto text-center px-4">
-      <form onSubmit={performSearch} className="w-full flex gap-2">
+    <div className="flex flex-col items-center justify-center h-full w-full text-center px-6 md:px-10">
+      <form onSubmit={performSearch} className="w-full md:w-4/5 lg:w-3/4 xl:w-2/3 max-w-none flex gap-2">
         <div className="relative flex-1">
           <input 
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="tx hash / address / epoch"
-            className="w-full bg-[var(--background)] border border-[var(--border)] p-4 focus:outline-none focus:border-[var(--primary)] placeholder:text-[var(--muted-foreground)] transition-colors"
+            className="w-full bg-[var(--background)] border-b border-[var(--border)] p-4 focus:outline-none focus:border-[var(--primary)] placeholder:text-[var(--muted-foreground)] transition-colors"
           />
         </div>
         <button 
@@ -287,19 +287,24 @@ const TxView = () => {
 
   return (
     <div className="h-full flex flex-col max-w-7xl mx-auto space-y-3 overflow-hidden p-2">
-      <div className="flex items-center gap-2 mb-1">
-        <button 
-          onClick={() => navigate('/')}
-          className="text-[12px] font-medium bg-[var(--muted)] text-[var(--muted-foreground)] px-2 py-0.5 hover:text-[var(--foreground)] transition-colors rounded-sm"
-        >
-          Back
-        </button>
-        <ChevronRight size={12} className="text-[var(--muted-foreground)]" />
-        <span className="text-[12px] font-medium text-[var(--primary)]">Transaction Details</span>
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => navigate('/')}
+            className="text-[12px] font-medium bg-[var(--muted)] text-[var(--muted-foreground)] px-2 py-0.5 hover:text-[var(--foreground)] transition-colors rounded-sm"
+          >
+            Back
+          </button>
+          <ChevronRight size={12} className="text-[var(--muted-foreground)]" />
+          <span className="text-[12px] font-medium text-[var(--primary)]">Transaction Details</span>
+        </div>
+        {data.from === data.to && (
+          <span className="text-[12px] font-bold text-amber-500 uppercase bg-amber-500/10 px-1 border border-amber-500/20">Self-Operation</span>
+        )}
       </div>
 
       {/* HEADER CARD */}
-      <div className="bg-[var(--card)] border border-[var(--border)] p-4 rounded-none">
+      <div className="bg-[var(--card)] p-4 rounded-none">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex items-center gap-4">
             <div className={cn("p-3 rounded-md", config.bg, config.color)}>
@@ -321,7 +326,7 @@ const TxView = () => {
               </div>
             </div>
           </div>
-          <div className="w-full md:w-auto text-right border-l-0 md:border-l border-[var(--border)] md:pl-6">
+          <div className="w-full md:w-auto text-right border-t border-dashed border-[var(--border)] pt-3 md:pt-0 md:border-t-0 md:border-l md:border-dashed md:pl-6">
             <p className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase">Confirmed Epoch</p>
             <button
               onClick={() => navigate(`/epoch/${data.epoch}`)}
@@ -338,11 +343,11 @@ const TxView = () => {
         {/* LEFT COLUMN: FLOW + MEMO */}
         <div className="lg:col-span-8 flex flex-col gap-3 min-h-0">
           {/* FLOW & VALUES */}
-          <div className="bg-[var(--background)] border border-[var(--border)] p-4 flex flex-col justify-center rounded-none flex-shrink-0 h-auto lg:h-[220px]">
-            <div className="space-y-4">
-              <div className="relative">
-                <span className="text-[10px] font-medium uppercase text-[var(--muted-foreground)] mb-1 block tracking-widest">From / Origin</span>
-                <div className="bg-[var(--card)] border border-[var(--border)] p-3 flex items-center justify-between group">
+          <div className="bg-[var(--background)] flex flex-col justify-center rounded-none flex-shrink-0 h-auto lg:h-[220px]">
+            <div>
+              <div className="relative py-3">
+                <span className="text-[12px] font-medium uppercase text-[var(--muted-foreground)] mb-1 block tracking-widest">From / Origin</span>
+                <div className="bg-[var(--card)] p-3 flex items-center justify-between group">
                   <span className="text-xs font-bold truncate pr-4 text-[var(--foreground)]">{data.from}</span>
                   <button onClick={() => handleCopy(data.from, 'from')} className="opacity-40 group-hover:opacity-100 transition-opacity text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
                     {copied === 'from' ? <Check size={12}/> : <Copy size={12}/>}
@@ -350,17 +355,17 @@ const TxView = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 py-3">
                 <div className="h-[1px] flex-1 bg-[var(--border)] border-t border-dashed border-[var(--muted-foreground)] opacity-30"></div>
-                <div className={cn("p-1.5 border border-[var(--border)] bg-[var(--card)] shadow-sm", config.color)}>
+                <div className={cn("p-1.5 bg-[var(--card)] shadow-sm", config.color)}>
                   {config.icon}
                 </div>
                 <div className="h-[1px] flex-1 bg-[var(--border)] border-t border-dashed border-[var(--muted-foreground)] opacity-30"></div>
               </div>
 
-              <div className="relative">
-                <span className="text-[10px] font-medium uppercase text-[var(--muted-foreground)] mb-1 block tracking-widest">To / Destination</span>
-                <div className="bg-[var(--card)] border border-[var(--border)] p-3 flex items-center justify-between group">
+              <div className="relative pt-3">
+                <span className="text-[12px] font-medium uppercase text-[var(--muted-foreground)] mb-1 block tracking-widest">To / Destination</span>
+                <div className="bg-[var(--card)] p-3 flex items-center justify-between group">
                 <span className={cn(
                   "text-xs font-bold truncate pr-4",
                   data.from === data.to ? "text-[var(--muted-foreground)] italic" : "text-[var(--foreground)]"
@@ -371,33 +376,30 @@ const TxView = () => {
                     {copied === 'to' ? <Check size={12}/> : <Copy size={12}/>}
                   </button>
                 </div>
-                {data.from === data.to && (
-                  <span className="text-[9px] absolute right-0 -bottom-4 font-bold text-amber-500 uppercase bg-amber-500/10 px-1 border border-amber-500/20">Self-Operation</span>
-                )}
               </div>
             </div>
           </div>
           
           {/* MEMO BOX */}
-          <div className="bg-[var(--card)] border border-[var(--border)] p-4 rounded-none flex-1 min-h-0 flex flex-col h-auto lg:h-[320px]">
-            <div className="flex items-center justify-between mb-2 border-b border-[var(--border)] pb-2">
+          <div className="bg-[var(--card)] p-4 rounded-none flex-1 min-h-0 flex flex-col h-auto lg:h-[320px]">
+            <div className="flex items-center justify-between mb-2 pb-2">
               <div className="flex items-center gap-2">
                 <MessageSquare size={14} className="text-[var(--muted-foreground)]" />
-                <h3 className="text-[10px] font-bold uppercase">Memo & Decoded Data</h3>
+                <h3 className="text-[12px] font-bold uppercase">Memo & Decoded Data</h3>
               </div>
             </div>
-            <div className="flex-1 grid grid-rows-2 gap-2 min-h-0">
-              <div className="bg-[var(--background)] p-3 border border-[var(--border)] h-full flex flex-col">
-                <span className="text-[9px] font-medium text-[var(--muted-foreground)] uppercase block mb-1 underline">Parsed Message</span>
+            <div className="flex-1 flex flex-col min-h-0">
+              <div className="bg-[var(--background)] p-3 h-full flex flex-col border-b border-dashed border-[var(--border)]">
+                <span className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase block mb-1">Parsed Message</span>
                 {decodedMsg && decodedMsg !== "[]" ? (
                   <p className="text-[10px] font-bold text-[var(--foreground)] break-all flex-1">{decodedMsg}</p>
                 ) : (
                   <p className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase italic flex-1">Null Reference</p>
                 )}
               </div>
-              <div className="bg-[var(--background)] p-2 border border-[var(--border)] h-full flex flex-col">
-                <span className="text-[9px] font-medium text-[var(--muted-foreground)] uppercase block mb-1 underline">Raw Message (Hex/Buffer)</span>
-                <p className="text-[9px] font-mono text-[var(--muted-foreground)] break-all flex-1">{data.message || "null"}</p>
+              <div className="bg-[var(--background)] p-2 h-full flex flex-col pt-3">
+                <span className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase block mb-1">Raw Message (Hex/Buffer)</span>
+                <p className="text-[9px] font-mono break-all flex-1">{data.message || "null"}</p>
               </div>
             </div>
           </div>
@@ -406,17 +408,17 @@ const TxView = () => {
         {/* RIGHT COLUMN: FINANCIALS + INTERNAL LOGIC */}
         <div className="lg:col-span-4 flex flex-col gap-3 min-h-0">
           {/* FINANCIALS (Settled Amount) */}
-          <div className="bg-[var(--card)] text-[var(--foreground)] p-4 border border-[var(--border)] flex flex-col justify-between rounded-none flex-shrink-0 h-auto lg:h-[220px]">
+          <div className="bg-[var(--card)] text-[var(--foreground)] p-4 flex flex-col justify-between rounded-none flex-shrink-0 h-auto lg:h-[220px]">
             <div>
-              <span className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase block mb-1">Settled Amount</span>
+              <span className="text-[12px] font-medium text-[var(--muted-foreground)] uppercase block mb-1">Settled Amount</span>
               <div className="flex items-baseline gap-2">
                 <h2 className={cn("text-3xl font-bold tracking-tighter", config.color)}>{data.amount}</h2>
                 <span className={cn("text-3xl font-bold opacity-60", config.color)}>OCT</span>
               </div>
-              <p className="text-[9px] text-[var(--muted-foreground)] font-bold mt-1 border-l-2 border-[var(--border)] pl-2 uppercase tracking-tighter">Raw Units: {data.amount_raw}</p>
+              <p className="text-[11px] text-[var(--muted-foreground)] font-bold mt-1 border-l-2 border-dashed border-[var(--border)] pl-2 uppercase tracking-tighter">Raw Units: {data.amount_raw}</p>
             </div>
 
-            <div className="mt-4 space-y-2 pt-4 border-t border-[var(--border)]">
+            <div className="mt-4 space-y-2 pt-4 border-t border-dashed border-[var(--border)]">
               <div className="flex justify-between items-center">
                 <span className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase">Computed Gas Fee</span>
                 <div className="text-right">
@@ -426,15 +428,15 @@ const TxView = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase">Transaction Nonce</span>
-                <span className="text-xs font-bold border-b border-[var(--border)] pb-0.5">{data.nonce}</span>
+                <span className="text-xs font-bold border-b border-dashed border-[var(--border)] pb-0.5">{data.nonce}</span>
               </div>
             </div>
           </div>
 
           {/* INTERNAL LOGIC DATA */}
-          <div className="bg-[var(--card)] border border-[var(--border)] p-4 flex flex-col min-h-0 h-auto lg:h-[320px]">
+          <div className="bg-[var(--card)] p-4 flex flex-col min-h-0 h-auto lg:h-[320px]">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-[10px] font-bold uppercase flex items-center gap-2">
+              <h3 className="text-[12px] font-bold uppercase flex items-center gap-2">
                 <Fingerprint size={14} />
                 Internal Logic Data
               </h3>
@@ -447,23 +449,23 @@ const TxView = () => {
             </div>
             
             <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-1 scrollbar-hide">
-              <div className="grid grid-rows-[auto_auto_1fr] gap-3 min-h-0">
-                <div>
+              <div className="flex flex-col min-h-0">
+                <div className="py-1">
                   <span className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase block">Public Key</span>
-                  <div className="text-[10px] font-mono truncate bg-[var(--background)] p-1.5 border border-[var(--border)] mt-1">{innerData.public_key || "N/A"}</div>
+                  <div className="text-[10px] font-mono truncate bg-[var(--background)] p-1.5 mt-1">{innerData.public_key || "N/A"}</div>
                 </div>
 
-                <div>
+                <div className="py-1">
                   <span className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase block mb-1">Transaction Signature</span>
-                  <div className="text-[9px] font-mono break-all text-[var(--muted-foreground)] bg-[var(--background)] p-2 border border-[var(--border)]">
+                  <div className="text-[9px] font-mono break-all text-[var(--muted-foreground)] bg-[var(--background)] p-2">
                      {innerData.signature || "N/A"}
                   </div>
                 </div>
 
-                <div className="border-t border-[var(--border)] pt-2 flex flex-col min-h-0">
+                <div className="pt-1 flex flex-col min-h-0">
                   <span className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase block mb-1">Encrypted Payload / Script</span>
                   <div className={cn(
-                    "p-2 border border-[var(--border)] transition-all duration-300 flex-1",
+                    "p-2 transition-all duration-300 flex-1",
                     revealData ? "bg-[var(--background)] text-[var(--foreground)]" : "bg-[var(--muted)] text-[var(--muted-foreground)]"
                   )}>
                     {innerData.encrypted_data ? (
@@ -581,32 +583,36 @@ const AddressView = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-4 flex-1 min-h-0">
         <div className="flex flex-col min-h-0">
-          <div className="bg-[var(--card)] border border-[var(--border)] p-4 flex-1 min-h-0 flex flex-col">
+          <div className="bg-[var(--card)] p-4 flex-1 min-h-0 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Wallet Information</h3>
               <span className="text-[9px] font-bold uppercase text-[var(--muted-foreground)]">Overview</span>
             </div>
-            <div className="bg-[var(--background)] border border-[var(--border)] p-3 mb-4">
+            <div className="py-3 border-b border-dashed border-[var(--border)]">
               <DataRow label="Address" value={data.address} copyable onCopy={() => handleCopy(data.address, 'addr')} copied={copied === 'addr'} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-              <div className="bg-[var(--background)] border border-[var(--border)] p-3 flex flex-col items-center justify-center text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 pt-3 flex-1 auto-rows-fr sm:gap-0">
+              <div className="flex flex-col items-center justify-center text-center h-full sm:border-r sm:border-dashed sm:border-[var(--border)] sm:pr-3">
                 <div className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">Balance</div>
                 <div className="text-2xl font-bold mt-2">{balance ?? data.balance_oct} OCT</div>
               </div>
-              <div className="bg-[var(--background)] border border-[var(--border)] p-3 flex flex-col items-center justify-center text-center">
+              <div className="flex flex-col items-center justify-center text-center h-full sm:pl-3">
                 <div className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">Nonce</div>
                 <div className="text-2xl font-bold mt-2">{data.nonce}</div>
               </div>
-              <div className="bg-[var(--background)] border border-[var(--border)] p-3 sm:col-span-2 flex flex-col items-center justify-center text-center">
-                <div className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">Tx Count / Has Public Key</div>
-                <div className="text-2xl font-bold mt-2">{data.transactions} / {data.has_public_key ? 'Yes' : 'No'}</div>
+              <div className="flex flex-col items-center justify-center text-center h-full sm:border-r sm:border-dashed sm:border-[var(--border)] sm:pr-3 sm:border-t sm:border-dashed sm:border-[var(--border)] sm:pt-3">
+                <div className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">Tx Count</div>
+                <div className="text-2xl font-bold mt-2">{data.transactions}</div>
+              </div>
+              <div className="flex flex-col items-center justify-center text-center h-full sm:border-t sm:border-dashed sm:border-[var(--border)] sm:pt-3 sm:pl-3">
+                <div className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">Has Public Key</div>
+                <div className="text-2xl font-bold mt-2">{data.has_public_key ? 'Yes' : 'No'}</div>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col min-h-0">
-          <div className="bg-[var(--card)] border border-[var(--border)] p-4 flex-1 min-h-0 flex flex-col">
+          <div className="bg-[var(--card)] p-4 flex-1 min-h-0 flex flex-col">
             <h3 className="text-sm font-semibold mb-4">Recent Transactions</h3>
             <ScrollArea.Root className="flex-1 overflow-hidden">
               <ScrollArea.Viewport className="h-full w-full pr-2">
@@ -637,7 +643,10 @@ const AddressView = () => {
                     }
                     const finalDirection = direction || 'out';
                     return (
-                    <div key={`${tx.hash}-${i}`} className="grid grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 p-2 border border-[var(--border)] text-xs font-medium rounded-md hover:bg-[var(--muted)] transition-colors min-w-0">
+                    <div key={`${tx.hash}-${i}`} className={cn(
+                      "grid grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 py-2 text-xs font-medium hover:bg-[var(--muted)] transition-colors min-w-0",
+                      i < recentTxs.length - 1 && "border-b border-dashed border-[var(--border)]"
+                    )}>
                       <span className="text-[10px] font-bold text-[var(--muted-foreground)]">#{i + 1}</span>
                       <span className="truncate min-w-0">{tx.hash}</span>
                       <span className={cn(
@@ -700,6 +709,12 @@ const EpochView = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
+  const [transactionsError, setTransactionsError] = useState<string | null>(null);
+  const [transactionsPage, setTransactionsPage] = useState(1);
+  const [hasMoreTransactions, setHasMoreTransactions] = useState(true);
+  const [transactionsPageSize] = useState(20);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -718,9 +733,88 @@ const EpochView = () => {
     if (epoch) fetchData();
   }, [epoch]);
 
+  useEffect(() => {
+    if (!epoch) return;
+    setTransactions([]);
+    setTransactionsError(null);
+    setTransactionsPage(1);
+    setHasMoreTransactions(true);
+  }, [epoch]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      if (!epoch) return;
+      if (!hasMoreTransactions) return;
+      setTransactionsLoading(true);
+      setTransactionsError(null);
+      try {
+        const txResponse = await fetch(`${SECOND_RPC_PROXY}/epochs/${epoch}/transactions?page=${transactionsPage}&page_size=${transactionsPageSize}`);
+        if (!txResponse.ok) throw new Error('Failed to fetch transactions');
+        const txJson = await txResponse.json();
+        const items = Array.isArray(txJson?.items)
+          ? txJson.items
+          : Array.isArray(txJson?.transactions)
+            ? txJson.transactions
+            : Array.isArray(txJson)
+              ? txJson
+              : [];
+        setTransactions(prev => {
+          const next = transactionsPage === 1 ? items : [...prev, ...items];
+          const seen = new Set<string>();
+          return next.filter(item => {
+            const hash =
+              typeof item === 'string'
+                ? item
+                : item?.hash ?? item?.tx_hash ?? item?.transaction_hash ?? item?.id ?? '';
+            if (!hash) return true;
+            if (seen.has(hash)) return false;
+            seen.add(hash);
+            return true;
+          });
+        });
+        setHasMoreTransactions(items.length === transactionsPageSize);
+      } catch (txErr: any) {
+        setTransactionsError(txErr.message);
+        setHasMoreTransactions(false);
+      } finally {
+        setTransactionsLoading(false);
+      }
+    };
+    fetchTransactions();
+  }, [epoch, transactionsPage, transactionsPageSize, hasMoreTransactions]);
+
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
   if (!data) return null;
+
+  const transactionList = transactions.length > 0
+    ? transactions
+    : Array.isArray(data.transactions)
+      ? data.transactions
+      : Array.isArray(data.items)
+        ? data.items
+        : Array.isArray(data.txs)
+          ? data.txs
+          : Array.isArray(data.transaction_hashes)
+            ? data.transaction_hashes
+            : Array.isArray(data.transaction_hash_list)
+              ? data.transaction_hash_list
+              : [];
+
+  const totalTransactions =
+    typeof data.transactions === 'number'
+      ? data.transactions
+      : Array.isArray(data.transactions)
+        ? data.transactions.length
+        : undefined;
+
+  const transactionCountValue = totalTransactions !== undefined
+    ? `${transactions.length > 0 ? transactions.length : transactionList.length} / ${totalTransactions}`
+    : Array.isArray(transactionList) && transactionList.length > 0
+      ? transactionList.length
+      : data.transactions;
+  const hasTransactionItems = transactionList.length > 0;
+  const showTransactionsPanel = hasTransactionItems || transactionsLoading || !!transactionsError;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -730,14 +824,96 @@ const EpochView = () => {
         <span className="text-xs font-medium text-[var(--primary)]">Epoch Details</span>
       </div>
       <div className="flex-1 flex items-center justify-center overflow-y-auto">
-        <div className="bg-[var(--card)] border border-[var(--border)] p-6 w-full max-w-xl">
+        <div className="bg-[var(--card)] p-6 w-full max-w-xl">
           <h3 className="text-xl font-semibold mb-6 text-center">Epoch #{data.epoch_number}</h3>
-          <div className="space-y-4">
-            <DataRow label="Finalized At" value={new Date(data.finalized_at).toLocaleString()} />
-            <DataRow label="Validator" value={data.validator_address} truncate />
-            <DataRow label="Transactions" value={data.transactions} />
-            <DataRow label="Nodes" value={data.nodes} />
-            <DataRow label="Tree Hash" value={data.tree_hash} truncate />
+          <div>
+            <div className="py-3 border-b border-dashed border-[var(--border)]">
+              <DataRow label="Finalized At" value={new Date(data.finalized_at).toLocaleString()} />
+            </div>
+            <div className="py-3 border-b border-dashed border-[var(--border)]">
+              <DataRow label="Validator" value={data.validator_address} truncate />
+            </div>
+            <div className="py-3 border-b border-dashed border-[var(--border)]">
+              <DataRow label="Transactions" value={transactionCountValue} />
+              <div className="mt-2 pt-2 border-t border-dashed border-[var(--border)] space-y-2">
+                {showTransactionsPanel ? (
+                  <>
+                    <ScrollArea.Root className={cn(
+                      "w-full overflow-hidden",
+                      hasTransactionItems ? "h-56" : "h-10"
+                    )}>
+                      <ScrollArea.Viewport className="h-full w-full pr-2">
+                        <div className="space-y-2">
+                          {hasTransactionItems && (
+                            <>
+                              {transactionList.map((item: any, index: number) => {
+                                const hash =
+                                  typeof item === 'string'
+                                    ? item
+                                    : item?.hash ?? item?.tx_hash ?? item?.transaction_hash ?? item?.id ?? '';
+                                const label = hash || `Tx #${index + 1}`;
+                                return (
+                                  <div key={`${label}-${index}`} className={cn(
+                                    "flex items-center justify-between gap-2 text-xs font-medium",
+                                    index < transactionList.length - 1 && "border-b border-dashed border-[var(--border)] pb-2"
+                                  )}>
+                                    <span className="truncate min-w-0">{label}</span>
+                                    {hash ? (
+                                      <button
+                                        onClick={() => navigate(`/tx/${hash}`)}
+                                        className="text-[var(--primary)] hover:underline whitespace-nowrap"
+                                      >
+                                        View
+                                      </button>
+                                    ) : (
+                                      <span className="text-[var(--muted-foreground)] whitespace-nowrap">N/A</span>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+                          {transactionsLoading && (
+                            <div className="text-[9px] text-[var(--muted-foreground)] uppercase">Loading Transactions...</div>
+                          )}
+                          {!transactionsLoading && transactionsError && (
+                            <div className="text-[9px] text-rose-500">{transactionsError}</div>
+                          )}
+                        </div>
+                      </ScrollArea.Viewport>
+                      {hasTransactionItems && (
+                        <>
+                          <ScrollArea.Scrollbar className="flex select-none touch-none p-[1px] bg-transparent hover:bg-[var(--muted)] transition-colors" orientation="vertical">
+                            <ScrollArea.Thumb className="flex-1 bg-[var(--border)] rounded-full" />
+                          </ScrollArea.Scrollbar>
+                          <ScrollArea.Corner className="bg-transparent" />
+                        </>
+                      )}
+                    </ScrollArea.Root>
+                    {hasMoreTransactions && (
+                      <button
+                        onClick={() => setTransactionsPage(prev => prev + 1)}
+                        disabled={transactionsLoading}
+                        className={cn(
+                          "w-full text-xs font-medium px-3 py-1 border border-[var(--border)]",
+                          transactionsLoading ? "opacity-40 cursor-not-allowed" : "hover:bg-[var(--muted)]"
+                        )}
+                      >
+                        {transactionsLoading ? "Loading..." : "Load More"}
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-[9px] text-[var(--muted-foreground)] uppercase">No Transactions</div>
+                )}
+              </div>
+            </div>
+            <div className="py-3 border-b border-dashed border-[var(--border)]">
+              <DataRow label="Nodes" value={data.nodes} />
+            </div>
+            <div className="pt-3">
+              <DataRow label="Tree Hash" value={data.tree_hash} truncate />
+            </div>
           </div>
         </div>
       </div>
