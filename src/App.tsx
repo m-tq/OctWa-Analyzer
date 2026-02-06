@@ -353,7 +353,12 @@ const TxView = () => {
               <div className="relative py-2 md:py-3">
                 <span className="text-[10px] md:text-[12px] font-medium uppercase text-muted-foreground mb-1 block tracking-widest">From / Origin</span>
                 <div className="bg-card p-2 md:p-3 flex items-center justify-between group shadow-sm">
-                  <span className="text-[10px] md:text-xs font-bold truncate pr-2 md:pr-4 text-foreground">{data.from}</span>
+                  <button 
+                    onClick={() => navigate(`/address/${data.from}`)}
+                    className="text-[10px] md:text-xs font-bold truncate pr-2 md:pr-4 text-foreground hover:text-primary transition-colors glow-hover text-left flex-1"
+                  >
+                    {data.from}
+                  </button>
                   <button onClick={() => handleCopy(data.from, 'from')} className="opacity-40 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground glow-hover flex-shrink-0">
                     {copied === 'from' ? <Check size={10} className="md:w-3 md:h-3"/> : <Copy size={10} className="md:w-3 md:h-3"/>}
                   </button>
@@ -371,12 +376,15 @@ const TxView = () => {
               <div className="relative pt-2 md:pt-3">
                 <span className="text-[10px] md:text-[12px] font-medium uppercase text-muted-foreground mb-1 block tracking-widest">To / Destination</span>
                 <div className="bg-card p-2 md:p-3 flex items-center justify-between group shadow-sm">
-                <span className={cn(
-                  "text-[10px] md:text-xs font-bold truncate pr-2 md:pr-4",
-                  data.from === data.to ? "text-muted-foreground italic" : "text-foreground"
-                )}>
+                  <button 
+                    onClick={() => navigate(`/address/${data.to}`)}
+                    className={cn(
+                      "text-[10px] md:text-xs font-bold truncate pr-2 md:pr-4 transition-colors glow-hover text-left flex-1",
+                      data.from === data.to ? "text-muted-foreground italic hover:text-foreground" : "text-foreground hover:text-primary"
+                    )}
+                  >
                     {data.to}
-                  </span>
+                  </button>
                   <button onClick={() => handleCopy(data.to, 'to')} className="opacity-40 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground glow-hover flex-shrink-0">
                     {copied === 'to' ? <Check size={10} className="md:w-3 md:h-3"/> : <Copy size={10} className="md:w-3 md:h-3"/>}
                   </button>
