@@ -626,7 +626,7 @@ const AddressView = () => {
           <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col shadow-md">
             <h3 className="text-sm font-semibold mb-4 tracking-tight">Recent Transactions</h3>
             <ScrollArea.Root className="flex-1 overflow-hidden">
-              <ScrollArea.Viewport className="h-full w-full pr-2">
+              <ScrollArea.Viewport className="h-full w-full pr-3">
                 <div className="space-y-2">
                   {recentTxs.map((tx: any, i: number) => {
                     const amountRaw = tx.amount_raw ?? tx.amount ?? tx.value ?? tx.amount_oct;
@@ -655,10 +655,10 @@ const AddressView = () => {
                     const finalDirection = direction || 'out';
                     return (
                     <div key={`${tx.hash}-${i}`} className={cn(
-                      "grid grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 py-2 text-xs font-medium hover:bg-[var(--muted)] transition-colors min-w-0",
-                      i < recentTxs.length - 1 && "border-b border-dashed border-[var(--border)]"
+                      "grid grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 py-2 text-xs font-medium hover:bg-muted transition-colors min-w-0",
+                      i < recentTxs.length - 1 && "border-b border-dashed border-border"
                     )}>
-                      <span className="text-[10px] font-bold text-[var(--muted-foreground)]">#{i + 1}</span>
+                      <span className="text-[10px] font-bold text-muted-foreground">#{i + 1}</span>
                       <span className="truncate min-w-0">{tx.hash}</span>
                       <span className={cn(
                         "inline-flex items-center justify-center gap-1 px-1.5 py-0.5 text-[9px] font-bold uppercase border whitespace-nowrap",
@@ -669,7 +669,7 @@ const AddressView = () => {
                         {finalDirection}
                       </span>
                       <span className={cn(
-                        "text-[var(--primary)] text-right",
+                        "text-primary text-right",
                         finalDirection === 'out' && "text-rose-500",
                         finalDirection === 'in' && "text-emerald-500"
                       )}>
@@ -677,22 +677,22 @@ const AddressView = () => {
                       </span>
                       <button 
                         onClick={() => navigate(`/tx/${tx.hash}`)}
-                        className="text-[var(--primary)] hover:underline"
+                        className="text-primary hover:underline glow-hover"
                       >
                         View
                       </button>
                     </div>
                   )})}
                   {!recentLoading && recentTxs.length === 0 && !recentError && (
-                    <div className="text-[9px] text-[var(--muted-foreground)] uppercase text-center py-2">No Transactions</div>
+                    <div className="text-[9px] text-muted-foreground uppercase text-center py-2">No Transactions</div>
                   )}
                   {recentError && (
                     <div className="text-[9px] text-rose-500 text-center py-2">{recentError}</div>
                   )}
                 </div>
               </ScrollArea.Viewport>
-              <ScrollArea.Scrollbar className="flex select-none touch-none p-[1px] bg-transparent hover:bg-[var(--muted)] transition-colors" orientation="vertical">
-                <ScrollArea.Thumb className="flex-1 bg-[var(--border)] rounded-full" />
+              <ScrollArea.Scrollbar className="flex select-none touch-none w-2 bg-muted/30 hover:bg-muted/50 transition-colors rounded-full" orientation="vertical">
+                <ScrollArea.Thumb className="flex-1 bg-border hover:bg-muted-foreground transition-colors rounded-full relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[8px] before:min-h-[40px]" />
               </ScrollArea.Scrollbar>
               <ScrollArea.Corner className="bg-transparent" />
             </ScrollArea.Root>
