@@ -6,7 +6,7 @@ export default defineConfig({
   root: __dirname,
   publicDir: path.resolve(__dirname, 'public'),
   plugins: [react()],
-  base: './',
+  base: '/',  // ← UBAH INI dari './' ke '/'
   server: {
     proxy: {
       '/api/main': {
