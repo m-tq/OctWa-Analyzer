@@ -29,7 +29,6 @@ const App = () => {
 const MainLayout = () => {
   const [isDark, setIsDark] = useState(true);
   const [currentBlock, setCurrentBlock] = useState<number>(44444);
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -63,13 +62,15 @@ const MainLayout = () => {
   return (
     <div className="flex flex-col h-screen bg-background text-foreground transition-colors duration-300 font-mono">
       <Header isDark={isDark} setIsDark={setIsDark} />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-1 md:p-2 mt-[56px] mb-[32px]">
-        <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/tx/:hash" element={<TxView />} />
-          <Route path="/address/:address" element={<AddressView />} />
-          <Route path="/epoch/:epoch" element={<EpochView />} />
-        </Routes>
+      <main className="flex-1 overflow-hidden p-1 md:p-2 mt-[56px] mb-[32px] min-h-0">
+        <div className="h-full overflow-y-auto overflow-x-hidden">
+          <Routes>
+            <Route path="/" element={<Welcome />} />
+            <Route path="/tx/:hash" element={<TxView />} />
+            <Route path="/address/:address" element={<AddressView />} />
+            <Route path="/epoch/:epoch" element={<EpochView />} />
+          </Routes>
+        </div>
       </main>
       <Footer currentBlock={currentBlock} />
     </div>
@@ -178,8 +179,8 @@ const Welcome = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full text-center px-6 md:px-10">
-      <form onSubmit={performSearch} className="w-full md:w-4/5 lg:w-3/4 xl:w-2/3 max-w-none flex gap-2">
+    <div className="flex flex-col items-center justify-center h-full w-full text-center px-4 md:px-10">
+      <form onSubmit={performSearch} className="w-full md:w-4/5 lg:w-3/4 xl:w-2/3 max-w-none flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <input 
             type="text"
@@ -191,7 +192,7 @@ const Welcome = () => {
         </div>
         <button 
           type="submit"
-          className="bg-primary text-primary-foreground px-8 font-medium border border-primary hover:opacity-90 transition-opacity"
+          className="bg-primary text-primary-foreground px-6 sm:px-8 font-medium border border-primary hover:opacity-90 transition-opacity"
         >
           Analyze
         </button>
@@ -587,48 +588,48 @@ const AddressView = () => {
   if (!data) return null;
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto md:overflow-hidden max-w-7xl mx-auto p-2">
+    <div className="flex flex-col h-full overflow-y-auto md:overflow-hidden max-w-7xl mx-auto p-1 sm:p-2">
       <div className="flex items-center gap-2 mb-2">
-        <button onClick={() => navigate('/')} className="text-xs font-medium bg-muted px-3 py-1 glow-hover hover:text-foreground transition-colors">Back</button>
-        <ChevronRight size={14} className="text-muted-foreground" />
-        <span className="text-xs font-medium text-primary">Address Details</span>
+        <button onClick={() => navigate('/')} className="text-[10px] sm:text-xs font-medium bg-muted px-2 sm:px-3 py-1 glow-hover hover:text-foreground transition-colors">Back</button>
+        <ChevronRight size={12} className="text-muted-foreground" />
+        <span className="text-[10px] sm:text-xs font-medium text-primary">Address Details</span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-4 flex-1 min-h-0 md:min-h-0">
+      <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-3 md:gap-4 flex-1 min-h-0 md:min-h-0">
         <div className="flex flex-col min-h-0 md:min-h-0">
-          <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold tracking-tight">Wallet Information</h3>
-              <span className="text-[9px] font-bold uppercase text-muted-foreground">Overview</span>
+          <div className="bg-card p-3 sm:p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-base sm:text-xl font-semibold tracking-tight">Wallet Information</h3>
+              <span className="text-[8px] sm:text-[9px] font-bold uppercase text-muted-foreground">Overview</span>
             </div>
-            <div className="py-3 border-b border-dashed border-border">
-              <DataRow label="Address" value={data.address} copyable onCopy={() => handleCopy(data.address, 'addr')} copied={copied === 'addr'} />
+            <div className="py-2 sm:py-3 border-b border-dashed border-border">
+              <DataRow label="Address" value={data.address} copyable onCopy={() => handleCopy(data.address, 'addr')} copied={copied === 'addr'} compact />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 pt-3 flex-1 auto-rows-fr sm:gap-0">
+            <div className="grid grid-cols-2 pt-3 flex-1 auto-rows-fr gap-2 sm:gap-0">
               <div className="flex flex-col items-center justify-center text-center h-full sm:border-r sm:border-dashed sm:border-border sm:pr-3">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Balance</div>
-                <div className="text-2xl font-bold mt-2">{balance ?? data.balance_oct} OCT</div>
+                <div className="text-[9px] sm:text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Balance</div>
+                <div className="text-lg sm:text-2xl font-bold mt-1 sm:mt-2">{balance ?? data.balance_oct} OCT</div>
               </div>
               <div className="flex flex-col items-center justify-center text-center h-full sm:pl-3">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Nonce</div>
-                <div className="text-2xl font-bold mt-2">{data.nonce}</div>
+                <div className="text-[9px] sm:text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Nonce</div>
+                <div className="text-lg sm:text-2xl font-bold mt-1 sm:mt-2">{data.nonce}</div>
               </div>
               <div className="flex flex-col items-center justify-center text-center h-full sm:border-r sm:border-dashed sm:border-border sm:pr-3 sm:border-t sm:border-dashed sm:border-border sm:pt-3">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Tx Count</div>
-                <div className="text-2xl font-bold mt-2">{data.transactions}</div>
+                <div className="text-[9px] sm:text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Tx Count</div>
+                <div className="text-lg sm:text-2xl font-bold mt-1 sm:mt-2">{data.transactions}</div>
               </div>
               <div className="flex flex-col items-center justify-center text-center h-full sm:border-t sm:border-dashed sm:border-border sm:pt-3 sm:pl-3">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Has Public Key</div>
-                <div className="text-2xl font-bold mt-2">{data.has_public_key ? 'Yes' : 'No'}</div>
+                <div className="text-[9px] sm:text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Has Public Key</div>
+                <div className="text-lg sm:text-2xl font-bold mt-1 sm:mt-2">{data.has_public_key ? 'Yes' : 'No'}</div>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col min-h-0 md:min-h-0">
-          <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
-            <h3 className="text-sm font-semibold mb-4 tracking-tight">Recent Transactions</h3>
+          <div className="bg-card p-3 sm:p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
+            <h3 className="text-xs sm:text-sm font-semibold mb-3 sm:mb-4 tracking-tight">Recent Transactions</h3>
             <ScrollArea.Root className="flex-1 overflow-hidden">
-              <ScrollArea.Viewport className="h-full w-full pr-3">
-                <div className="space-y-2">
+              <ScrollArea.Viewport className="h-full w-full pr-2 sm:pr-3">
+                <div className="space-y-1.5 sm:space-y-2">
                   {recentTxs.map((tx: any, i: number) => {
                     const amountRaw = tx.amount_raw ?? tx.amount ?? tx.value ?? tx.amount_oct;
                     const amountNumber = amountRaw !== undefined && amountRaw !== null ? Number(amountRaw) / 1_000_000 : null;
@@ -656,11 +657,11 @@ const AddressView = () => {
                     const finalDirection = direction || 'out';
                     return (
                     <div key={`${tx.hash}-${i}`} className={cn(
-                      "grid grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 py-2 text-xs font-medium hover:bg-muted transition-colors min-w-0",
+                      "grid grid-cols-[28px_1fr_60px_auto] md:grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 py-2 text-[10px] md:text-xs font-medium hover:bg-muted transition-colors min-w-0",
                       i < recentTxs.length - 1 && "border-b border-dashed border-border"
                     )}>
-                      <span className="text-[10px] font-bold text-muted-foreground">#{i + 1}</span>
-                      <span className="truncate min-w-0">{tx.hash}</span>
+                      <span className="text-[9px] md:text-[10px] font-bold text-muted-foreground">#{i + 1}</span>
+                      <span className="truncate min-w-0 max-w-[140px] sm:max-w-none">{tx.hash}</span>
                       <span className={cn(
                         "inline-flex items-center justify-center gap-1 px-1.5 py-0.5 text-[9px] font-bold uppercase border whitespace-nowrap",
                         finalDirection === 'out' && "text-rose-500 border-rose-500/40 bg-rose-500/10",
@@ -829,30 +830,30 @@ const EpochView = () => {
   const showTransactionsPanel = hasTransactionItems || transactionsLoading || !!transactionsError;
 
   return (
-    <div className="h-full flex items-center justify-center p-2 overflow-hidden">
+    <div className="h-full flex items-center justify-center p-1 sm:p-2 overflow-hidden">
       <div className="w-full max-w-xl max-h-full overflow-y-auto scrollbar-hide">
         <div className="flex items-center gap-2 mb-2">
-          <button onClick={() => navigate('/')} className="text-xs font-medium bg-muted px-3 py-1 glow-hover hover:text-foreground transition-colors">Back</button>
-          <ChevronRight size={14} className="text-muted-foreground" />
-          <span className="text-xs font-medium text-primary">Epoch Details</span>
+          <button onClick={() => navigate('/')} className="text-[10px] sm:text-xs font-medium bg-muted px-2 sm:px-3 py-1 glow-hover hover:text-foreground transition-colors">Back</button>
+          <ChevronRight size={12} className="text-muted-foreground" />
+          <span className="text-[10px] sm:text-xs font-medium text-primary">Epoch Details</span>
         </div>
-        <div className="bg-card p-4 md:p-6 w-full shadow-md">
-          <h3 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-center tracking-tight">Epoch #{data.epoch_number}</h3>
+        <div className="bg-card p-3 sm:p-4 md:p-6 w-full shadow-md">
+          <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4 md:mb-6 text-center tracking-tight">Epoch #{data.epoch_number}</h3>
           <div>
             <div className="py-2 md:py-3 border-b border-dashed border-border">
-              <DataRow label="Finalized At" value={new Date(data.finalized_at).toLocaleString()} />
+              <DataRow label="Finalized At" value={new Date(data.finalized_at).toLocaleString()} compact />
             </div>
             <div className="py-2 md:py-3 border-b border-dashed border-border">
-              <DataRow label="Validator" value={data.validator_address} truncate />
+              <DataRow label="Validator" value={data.validator_address} truncate compact />
             </div>
             <div className="py-2 md:py-3 border-b border-dashed border-border">
-              <DataRow label="Transactions" value={transactionCountValue} />
+              <DataRow label="Transactions" value={transactionCountValue} compact />
               <div className="mt-2 pt-2 border-t border-dashed border-border space-y-2">
                 {showTransactionsPanel ? (
                   <>
                     <ScrollArea.Root className={cn(
                       "w-full overflow-hidden",
-                      hasTransactionItems ? "h-[120px]" : "h-10"
+                      hasTransactionItems ? "h-[96px] sm:h-[120px]" : "h-10"
                     )}>
                       <ScrollArea.Viewport className="h-full w-full pr-3">
                         <div className="space-y-2">
@@ -865,20 +866,20 @@ const EpochView = () => {
                                     : item?.hash ?? item?.tx_hash ?? item?.transaction_hash ?? item?.id ?? '';
                                 return (
                                   <div key={`${hash}-${index}`} className={cn(
-                                    "flex items-center gap-2 text-xs font-medium py-1",
+                                    "flex items-center gap-2 text-[10px] sm:text-xs font-medium py-1",
                                     index < transactionList.length - 1 && "border-b border-dashed border-border pb-2"
                                   )}>
-                                    <span className="text-[10px] font-bold text-muted-foreground flex-shrink-0 w-6">#{index + 1}</span>
-                                    <span className="truncate min-w-0 flex-1 text-[11px]">{hash || `Transaction ${index + 1}`}</span>
+                                    <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground flex-shrink-0 w-6">#{index + 1}</span>
+                                    <span className="truncate min-w-0 flex-1 text-[10px] sm:text-[11px] max-w-[160px] sm:max-w-none">{hash || `Transaction ${index + 1}`}</span>
                                     {hash ? (
                                       <button
                                         onClick={() => navigate(`/tx/${hash}`)}
-                                        className="text-primary hover:underline whitespace-nowrap glow-hover flex-shrink-0 text-[11px]"
+                                        className="text-primary hover:underline whitespace-nowrap glow-hover flex-shrink-0 text-[10px] sm:text-[11px]"
                                       >
                                         View
                                       </button>
                                     ) : (
-                                      <span className="text-muted-foreground whitespace-nowrap flex-shrink-0 text-[11px]">N/A</span>
+                                      <span className="text-muted-foreground whitespace-nowrap flex-shrink-0 text-[10px] sm:text-[11px]">N/A</span>
                                     )}
                                   </div>
                                 );
@@ -907,7 +908,7 @@ const EpochView = () => {
                         onClick={() => setTransactionsPage(prev => prev + 1)}
                         disabled={transactionsLoading}
                         className={cn(
-                          "w-full text-xs font-medium px-3 py-1 border border-border",
+                          "w-full text-[10px] sm:text-xs font-medium px-3 py-1 border border-border",
                           transactionsLoading ? "opacity-40 cursor-not-allowed" : "hover:bg-muted"
                         )}
                       >
@@ -921,7 +922,7 @@ const EpochView = () => {
               </div>
             </div>
             <div className="py-2 md:py-3 border-b border-dashed border-border">
-              <DataRow label="Nodes" value={data.nodes} />
+              <DataRow label="Nodes" value={data.nodes} compact />
             </div>
             <div className="pt-2 md:pt-3">
               <DataRow label="Tree Hash" value={data.tree_hash} compact />
