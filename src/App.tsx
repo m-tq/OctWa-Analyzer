@@ -145,7 +145,7 @@ const Header = ({ isDark, setIsDark }: { isDark: boolean, setIsDark: (v: boolean
 };
 
 const Footer = ({ currentBlock }: { currentBlock: number }) => (
-  <footer className="flex items-center justify-between py-1 px-2 md:px-4 border-t border-border bg-transparent text-[10px] md:text-xs font-medium text-muted-foreground fixed bottom-0 left-0 right-0">
+  <footer className="flex items-center justify-between py-1 px-2 md:px-4 border-t border-border bg-background/70 backdrop-blur-md sm:backdrop-blur-0 text-[10px] md:text-xs font-medium text-muted-foreground fixed bottom-0 left-0 right-0">
     <div className="w-1/3 text-left">
        <span className="hidden sm:inline">Version: v.0.0.1</span>
        <span className="sm:hidden">v.0.0.1</span>
@@ -291,7 +291,7 @@ const TxView = () => {
   const decodedMsg = decodeHex(data.message);
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-2 md:space-y-3 p-1 md:p-2">
+    <div className="w-full max-w-7xl mx-auto space-y-2 md:space-y-3 p-1 md:p-2 pb-16 sm:pb-2">
       <div className="flex items-center justify-between gap-2 mb-1">
         <div className="flex items-center gap-1 md:gap-2">
           <button 
@@ -588,7 +588,7 @@ const AddressView = () => {
   if (!data) return null;
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto md:overflow-hidden max-w-7xl mx-auto p-1 sm:p-2">
+    <div className="flex flex-col h-full overflow-y-auto md:overflow-hidden max-w-7xl mx-auto p-1 sm:p-2 pb-16 sm:pb-2">
       <div className="flex items-center gap-2 mb-2">
         <button onClick={() => navigate('/')} className="text-[10px] sm:text-xs font-medium bg-muted px-2 sm:px-3 py-1 glow-hover hover:text-foreground transition-colors">Back</button>
         <ChevronRight size={12} className="text-muted-foreground" />
