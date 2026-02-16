@@ -108,7 +108,7 @@ const Header = ({ isDark, setIsDark }: { isDark: boolean, setIsDark: (v: boolean
         >
           <Cpu size={16} style={{ color: '#3A4DFF' }} />
           <span className="hidden sm:inline">OctWa Analyzer</span>
-          <span className="sm:hidden">OctWa</span>
+          <span className="sm:hidden">OctWa Analyzer</span>
         </h1>
       </div>
       <div className="flex justify-center w-full">
@@ -280,15 +280,19 @@ const TxView = () => {
   if (!data) return null;
 
   const config = {
-    standard: { color: 'text-muted-foreground', bg: 'bg-muted', icon: <ArrowRight size={18} />, label: 'Public Transfer' },
-    private: { color: 'text-[hsl(var(--private-primary))]', bg: 'bg-[hsl(var(--private-primary)/0.1)]', icon: <Lock size={18} />, label: 'Private Transfer' },
-    decrypt: { color: 'text-purple-500', bg: 'bg-purple-500/10', icon: <Unlock size={18} />, label: 'Balance Decrypt' },
-    encrypt: { color: 'text-orange-500', bg: 'bg-orange-500/10', icon: <Shield size={18} />, label: 'Balance Encrypt' },
-    call: { color: 'text-rose-500', bg: 'bg-rose-500/10', icon: <Terminal size={18} />, label: 'Contract Call' }
-  }[data.op_type as string] || { color: 'text-muted-foreground', bg: 'bg-muted', icon: <ArrowRight size={18} />, label: 'Transaction' };
+    standard: { color: 'text-muted-foreground', bg: 'bg-muted', icon: <ArrowRight size={18} />, iconSm: <ArrowRight size={14} />, label: 'Public Transfer' },
+    private: { color: 'text-[hsl(var(--private-primary))]', bg: 'bg-[hsl(var(--private-primary)/0.1)]', icon: <Lock size={18} />, iconSm: <Lock size={14} />, label: 'Private Transfer' },
+    decrypt: { color: 'text-purple-500', bg: 'bg-purple-500/10', icon: <Unlock size={18} />, iconSm: <Unlock size={14} />, label: 'Balance Decrypt' },
+    encrypt: { color: 'text-orange-500', bg: 'bg-orange-500/10', icon: <Shield size={18} />, iconSm: <Shield size={14} />, label: 'Balance Encrypt' },
+    call: { color: 'text-rose-500', bg: 'bg-rose-500/10', icon: <Terminal size={18} />, iconSm: <Terminal size={14} />, label: 'Contract Call' }
+  }[data.op_type as string] || { color: 'text-muted-foreground', bg: 'bg-muted', icon: <ArrowRight size={18} />, iconSm: <ArrowRight size={14} />, label: 'Transaction' };
 
   const gasFee = (parseInt(data.ou || '0') * 0.000001).toFixed(6);
   const decodedMsg = decodeHex(data.message);
+  const hashValue = typeof data.tx_hash === 'string' ? data.tx_hash : String(data.tx_hash ?? '');
+  const hashLabel = hashValue && hashValue.length > 10
+    ? `${hashValue.slice(0, 5)}...${hashValue.slice(-5)}`
+    : (hashValue || 'N/A');
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-2 md:space-y-3 p-1 md:p-2 pb-16 sm:pb-2">
@@ -312,7 +316,36 @@ const TxView = () => {
       {/* HEADER CARD */}
       <div className="p-2 md:p-4 border-b border-dashed border-border">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4">
-          <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 w-full sm:hidden">
+            <div className={cn("p-1.5", config.bg, config.color)}>
+              {config.iconSm}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1 flex-wrap">
+                <span className={cn("text-[11px] font-semibold tracking-tight", config.color)}>{config.label}</span>
+                <span className="bg-primary/10 text-primary text-[8px] px-1.5 py-0.5 font-bold uppercase border border-primary/20">
+                  {data.status}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 text-muted-foreground mt-0.5">
+                <Hash size={10} className="flex-shrink-0" />
+                <span className="text-[10px] font-bold truncate">{hashLabel}</span>
+                <button onClick={() => handleCopy(data.tx_hash, 'hash')} className="hover:text-foreground transition-colors glow-hover flex-shrink-0">
+                  {copied === 'hash' ? <Check size={10} className="text-emerald-500"/> : <Copy size={10} />}
+                </button>
+              </div>
+            </div>
+            <div className="text-right">
+              <button
+                onClick={() => navigate(`/epoch/${data.epoch}`)}
+                className="text-[10px] font-semibold text-primary hover:underline glow-hover"
+              >
+                Epoch #{data.epoch.toLocaleString()}
+              </button>
+              <div className="text-[9px] text-muted-foreground">{resolveTimestamp()}</div>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-2 md:gap-4 w-full md:w-auto">
             <div className={cn("p-2 md:p-3", config.bg, config.color)}>
               {config.icon}
             </div>
@@ -324,16 +357,15 @@ const TxView = () => {
                 </span>
               </div>
               <div className="flex items-center gap-1 md:gap-2 text-muted-foreground mt-1">
-                <Hash size={10} className="md:hidden flex-shrink-0" />
-                <Hash size={12} className="hidden md:block flex-shrink-0" />
-                <span className="text-[10px] md:text-[12px] font-bold truncate">{data.tx_hash}</span>
+                <Hash size={12} className="flex-shrink-0" />
+                <span className="text-[10px] md:text-[12px] font-bold truncate">{hashValue}</span>
                 <button onClick={() => handleCopy(data.tx_hash, 'hash')} className="hover:text-foreground transition-colors glow-hover flex-shrink-0">
                   {copied === 'hash' ? <Check size={10} className="text-emerald-500 md:w-3 md:h-3"/> : <Copy size={10} className="md:w-3 md:h-3"/>}
                 </button>
               </div>
             </div>
           </div>
-          <div className="w-full md:w-auto text-left md:text-right border-t md:border-t-0 md:border-l border-dashed border-border pt-2 md:pt-0 md:pl-6">
+          <div className="w-full md:w-auto text-left md:text-right border-t md:border-t-0 md:border-l border-dashed border-border pt-2 md:pt-0 md:pl-6 hidden sm:block">
             <p className="text-[9px] md:text-[10px] font-medium text-muted-foreground uppercase">Confirmed Epoch</p>
             <button
               onClick={() => navigate(`/epoch/${data.epoch}`)}
@@ -628,7 +660,7 @@ const AddressView = () => {
           <div className="bg-card p-3 sm:p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
             <h3 className="text-xs sm:text-sm font-semibold mb-3 sm:mb-4 tracking-tight">Recent Transactions</h3>
             <ScrollArea.Root className="flex-1 overflow-hidden">
-              <ScrollArea.Viewport className="h-full w-full pr-2 sm:pr-3">
+              <ScrollArea.Viewport className="h-full w-full pr-0">
                 <div className="space-y-1.5 sm:space-y-2">
                   {recentTxs.map((tx: any, i: number) => {
                     const amountRaw = tx.amount_raw ?? tx.amount ?? tx.value ?? tx.amount_oct;
@@ -655,13 +687,23 @@ const AddressView = () => {
                       direction = 'out';
                     }
                     const finalDirection = direction || 'out';
+                    const hashValue = typeof tx.hash === 'string' ? tx.hash : String(tx.hash ?? '');
+                    const hashLabel = hashValue && hashValue.length > 10
+                      ? `${hashValue.slice(0, 5)}...${hashValue.slice(-5)}`
+                      : (hashValue || 'N/A');
                     return (
-                    <div key={`${tx.hash}-${i}`} className={cn(
-                      "grid grid-cols-[28px_1fr_60px_auto] md:grid-cols-[40px_1fr_70px_90px_auto] items-start gap-2 py-2 text-[10px] md:text-xs font-medium hover:bg-muted transition-colors min-w-0",
-                      i < recentTxs.length - 1 && "border-b border-dashed border-border"
-                    )}>
+                    <button
+                      type="button"
+                      key={`${tx.hash}-${i}`}
+                      onClick={() => navigate(`/tx/${tx.hash}`)}
+                      aria-label={`Open transaction ${hashLabel}`}
+                      className={cn(
+                        "grid grid-cols-[26px_1fr_62px_84px_22px] md:grid-cols-[32px_1fr_70px_100px_24px] items-center gap-2 py-2 text-[10px] md:text-xs font-medium hover:bg-muted transition-colors min-w-0 text-left w-full",
+                        i < recentTxs.length - 1 && "border-b border-dashed border-border"
+                      )}
+                    >
                       <span className="text-[9px] md:text-[10px] font-bold text-muted-foreground">#{i + 1}</span>
-                      <span className="truncate min-w-0 max-w-[140px] sm:max-w-none">{tx.hash}</span>
+                      <span className="truncate min-w-0">{hashLabel}</span>
                       <span className={cn(
                         "inline-flex items-center justify-center gap-1 px-1.5 py-0.5 text-[9px] font-bold uppercase border whitespace-nowrap",
                         finalDirection === 'out' && "text-rose-500 border-rose-500/40 bg-rose-500/10",
@@ -677,13 +719,10 @@ const AddressView = () => {
                       )}>
                         {amountLabel} OCT
                       </span>
-                      <button 
-                        onClick={() => navigate(`/tx/${tx.hash}`)}
-                        className="text-primary hover:underline glow-hover"
-                      >
-                        View
-                      </button>
-                    </div>
+                      <span className="text-muted-foreground">
+                        <Eye size={12} />
+                      </span>
+                    </button>
                   )})}
                   {!recentLoading && recentTxs.length === 0 && !recentError && (
                     <div className="text-[9px] text-muted-foreground uppercase text-center py-2">No Transactions</div>
@@ -855,7 +894,7 @@ const EpochView = () => {
                       "w-full overflow-hidden",
                       hasTransactionItems ? "h-[96px] sm:h-[120px]" : "h-10"
                     )}>
-                      <ScrollArea.Viewport className="h-full w-full pr-3">
+                      <ScrollArea.Viewport className="h-full w-full pr-0">
                         <div className="space-y-2">
                           {hasTransactionItems && (
                             <>
@@ -864,24 +903,27 @@ const EpochView = () => {
                                   typeof item === 'string'
                                     ? item
                                     : item?.hash ?? item?.tx_hash ?? item?.transaction_hash ?? item?.id ?? '';
+                                const hashValue = typeof hash === 'string' ? hash : String(hash ?? '');
+                                const hashLabel = hashValue && hashValue.length > 20
+                                  ? `${hashValue.slice(0, 10)}...${hashValue.slice(-10)}`
+                                  : (hashValue || `Transaction ${index + 1}`);
                                 return (
-                                  <div key={`${hash}-${index}`} className={cn(
-                                    "flex items-center gap-2 text-[10px] sm:text-xs font-medium py-1",
-                                    index < transactionList.length - 1 && "border-b border-dashed border-border pb-2"
-                                  )}>
-                                    <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground flex-shrink-0 w-6">#{index + 1}</span>
-                                    <span className="truncate min-w-0 flex-1 text-[10px] sm:text-[11px] max-w-[160px] sm:max-w-none">{hash || `Transaction ${index + 1}`}</span>
-                                    {hash ? (
-                                      <button
-                                        onClick={() => navigate(`/tx/${hash}`)}
-                                        className="text-primary hover:underline whitespace-nowrap glow-hover flex-shrink-0 text-[10px] sm:text-[11px]"
-                                      >
-                                        View
-                                      </button>
-                                    ) : (
-                                      <span className="text-muted-foreground whitespace-nowrap flex-shrink-0 text-[10px] sm:text-[11px]">N/A</span>
+                                  <button
+                                    type="button"
+                                    key={`${hash}-${index}`}
+                                    onClick={() => hashValue && navigate(`/tx/${hashValue}`)}
+                                    aria-label={`Open transaction ${hashLabel}`}
+                                    className={cn(
+                                      "grid grid-cols-[28px_1fr_24px] items-center gap-2 text-[10px] sm:text-xs font-medium py-1 w-full text-left hover:bg-muted transition-colors min-w-0",
+                                      index < transactionList.length - 1 && "border-b border-dashed border-border pb-2"
                                     )}
-                                  </div>
+                                  >
+                                    <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground">#{index + 1}</span>
+                                    <span className="truncate min-w-0 text-[10px] sm:text-[11px]">{hashLabel}</span>
+                                    <span className="text-muted-foreground justify-self-end">
+                                      <Eye size={12} />
+                                    </span>
+                                  </button>
                                 );
                               })}
                             </>
