@@ -98,13 +98,14 @@ const Header = ({ isDark, setIsDark }: { isDark: boolean, setIsDark: (v: boolean
   };
 
   return (
-    <header className="grid grid-cols-[auto_1fr_auto] items-center h-[56px] px-2 md:px-4 border-b border-border bg-card backdrop-blur-md z-10 fixed top-0 left-0 right-0 shadow-sm">
+    <header className="grid grid-cols-[auto_1fr_auto] items-center h-[56px] px-2 md:px-4 border-b border-border bg-transparent backdrop-blur-md z-10 fixed top-0 left-0 right-0">
       <div className="flex items-center gap-2 md:gap-4 justify-start">
         <h1 
           onClick={() => navigate('/')}
-          className="text-sm md:text-lg font-semibold flex items-center gap-1 md:gap-2 text-foreground cursor-pointer tracking-tight glow-hover"
+          className="text-sm md:text-lg font-semibold flex items-center gap-1 md:gap-2 cursor-pointer tracking-tight glow-hover"
+          style={{ color: '#3A4DFF' }}
         >
-          <Cpu className="text-primary" size={16} />
+          <Cpu size={16} style={{ color: '#3A4DFF' }} />
           <span className="hidden sm:inline">OctWa Analyzer</span>
           <span className="sm:hidden">OctWa</span>
         </h1>
@@ -143,7 +144,7 @@ const Header = ({ isDark, setIsDark }: { isDark: boolean, setIsDark: (v: boolean
 };
 
 const Footer = ({ currentBlock }: { currentBlock: number }) => (
-  <footer className="flex items-center justify-between py-1 px-2 md:px-4 border-t border-border bg-card text-[10px] md:text-xs font-medium text-muted-foreground fixed bottom-0 left-0 right-0 shadow-sm">
+  <footer className="flex items-center justify-between py-1 px-2 md:px-4 border-t border-border bg-transparent text-[10px] md:text-xs font-medium text-muted-foreground fixed bottom-0 left-0 right-0">
     <div className="w-1/3 text-left">
        <span className="hidden sm:inline">Version: v.0.0.1</span>
        <span className="sm:hidden">v.0.0.1</span>
@@ -308,7 +309,7 @@ const TxView = () => {
       </div>
 
       {/* HEADER CARD */}
-      <div className="bg-card p-2 md:p-4 shadow-md">
+      <div className="p-2 md:p-4 border-b border-dashed border-border">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
             <div className={cn("p-2 md:p-3", config.bg, config.color)}>
@@ -348,11 +349,11 @@ const TxView = () => {
         {/* LEFT COLUMN: FLOW + MEMO */}
         <div className="lg:col-span-8 flex flex-col gap-2 md:gap-3">
           {/* FLOW & VALUES */}
-          <div className="bg-background flex flex-col justify-center shadow-md p-2 md:p-0">
+          <div className="flex flex-col justify-center">
             <div>
               <div className="relative py-2 md:py-3">
-                <span className="text-[10px] md:text-[12px] font-medium uppercase text-muted-foreground mb-1 block tracking-widest">From / Origin</span>
-                <div className="bg-card p-2 md:p-3 flex items-center justify-between group shadow-sm">
+                <span className="text-[10px] md:text-[12px] font-medium uppercase text-muted-foreground mb-2 block tracking-widest">From / Origin</span>
+                <div className="p-2 md:p-3 flex items-center justify-between group">
                   <button 
                     onClick={() => navigate(`/address/${data.from}`)}
                     className="text-[10px] md:text-xs font-bold truncate pr-2 md:pr-4 text-foreground hover:text-primary transition-colors glow-hover text-left flex-1"
@@ -365,17 +366,17 @@ const TxView = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 md:gap-4 py-2 md:py-3">
-                <div className="h-[1px] flex-1 bg-border border-t border-dashed border-muted-foreground opacity-30"></div>
-                <div className={cn("p-1 md:p-1.5 bg-card shadow-sm", config.color)}>
+              <div className="flex items-center gap-2 md:gap-4 py-3 md:py-4">
+                <div className="h-[1px] flex-1 border-t border-dashed border-muted-foreground opacity-30"></div>
+                <div className={cn("p-1 md:p-1.5", config.color)}>
                   {config.icon}
                 </div>
-                <div className="h-[1px] flex-1 bg-border border-t border-dashed border-muted-foreground opacity-30"></div>
+                <div className="h-[1px] flex-1 border-t border-dashed border-muted-foreground opacity-30"></div>
               </div>
 
-              <div className="relative pt-2 md:pt-3">
-                <span className="text-[10px] md:text-[12px] font-medium uppercase text-muted-foreground mb-1 block tracking-widest">To / Destination</span>
-                <div className="bg-card p-2 md:p-3 flex items-center justify-between group shadow-sm">
+              <div className="relative py-2 md:py-3">
+                <span className="text-[10px] md:text-[12px] font-medium uppercase text-muted-foreground mb-2 block tracking-widest">To / Destination</span>
+                <div className="p-2 md:p-3 flex items-center justify-between group">
                   <button 
                     onClick={() => navigate(`/address/${data.to}`)}
                     className={cn(
@@ -394,7 +395,7 @@ const TxView = () => {
           </div>
           
           {/* MEMO BOX */}
-          <div className="bg-card p-2 md:p-4 shadow-md flex flex-col">
+          <div className="p-2 md:p-4 border-t border-dashed border-border flex flex-col">
             <div className="flex items-center justify-between mb-2 pb-2">
               <div className="flex items-center gap-1 md:gap-2">
                 <MessageSquare size={12} className="text-muted-foreground md:w-3.5 md:h-3.5" />
@@ -419,9 +420,9 @@ const TxView = () => {
         </div>
 
         {/* RIGHT COLUMN: FINANCIALS + INTERNAL LOGIC */}
-        <div className="lg:col-span-4 flex flex-col gap-2 md:gap-3">
+        <div className="lg:col-span-4 flex flex-col gap-2 md:gap-3 lg:border-l lg:border-dashed lg:border-border lg:pl-4">
           {/* FINANCIALS (Settled Amount) */}
-          <div className="bg-card text-foreground p-2 md:p-4 flex flex-col justify-between shadow-md">
+          <div className="text-foreground p-2 md:p-4 flex flex-col justify-between">
             <div>
               <span className="text-[10px] md:text-[12px] font-medium text-muted-foreground uppercase block mb-1">Settled Amount</span>
               <div className="flex items-baseline gap-1 md:gap-2">
@@ -447,7 +448,7 @@ const TxView = () => {
           </div>
 
           {/* INTERNAL LOGIC DATA */}
-          <div className="bg-card p-2 md:p-4 flex flex-col shadow-md">
+          <div className="p-2 md:p-4 flex flex-col border-t border-dashed border-border">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-[10px] md:text-[12px] font-bold uppercase flex items-center gap-1 md:gap-2 tracking-tight">
                 <Fingerprint size={12} className="md:w-3.5 md:h-3.5" />
@@ -594,7 +595,7 @@ const AddressView = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-4 flex-1 min-h-0 md:min-h-0">
         <div className="flex flex-col min-h-0 md:min-h-0">
-          <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col shadow-md">
+          <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold tracking-tight">Wallet Information</h3>
               <span className="text-[9px] font-bold uppercase text-muted-foreground">Overview</span>
@@ -623,7 +624,7 @@ const AddressView = () => {
           </div>
         </div>
         <div className="flex flex-col min-h-0 md:min-h-0">
-          <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col shadow-md">
+          <div className="bg-card p-4 flex-1 min-h-0 md:min-h-0 flex flex-col">
             <h3 className="text-sm font-semibold mb-4 tracking-tight">Recent Transactions</h3>
             <ScrollArea.Root className="flex-1 overflow-hidden">
               <ScrollArea.Viewport className="h-full w-full pr-3">
@@ -696,13 +697,13 @@ const AddressView = () => {
               </ScrollArea.Scrollbar>
               <ScrollArea.Corner className="bg-transparent" />
             </ScrollArea.Root>
-            <div className="pt-3">
+            <div className="pt-3 flex justify-center">
               <button
                 onClick={() => setRecentPage(prev => prev + 1)}
                 disabled={!hasMore || recentLoading}
                 className={cn(
-                  "w-full text-xs font-medium px-3 py-1 border border-[var(--border)]",
-                  !hasMore || recentLoading ? "opacity-40 cursor-not-allowed" : "hover:bg-[var(--muted)]"
+                  "text-xs font-medium px-4 py-1.5 border border-muted",
+                  !hasMore || recentLoading ? "opacity-40 cursor-not-allowed text-muted-foreground" : "hover:bg-muted text-foreground transition-colors"
                 )}
               >
                 {recentLoading ? "Loading..." : hasMore ? "Load More" : "No More Data"}
